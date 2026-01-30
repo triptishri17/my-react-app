@@ -1,0 +1,89 @@
+.edit-modal {
+    font-family: "Segoe UI", sans-serif;
+    padding: 20px;
+}
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f8f9fa;
+    border-radius: 10px 10px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.close-btn {
+    border: none;
+    background: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+/* Body */
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.modal-body input {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.modal-body input:focus {
+    outline: none;
+    border-color: #0d6efd;
+}
+
+/* Footer */
+.modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn.primary {
+    background-color: #ed0427;
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: #1355fe;
+}
+
+.btn.secondary {
+    background-color: #efe9e9;
+    color: #333;
+}
+
+.btn.secondary:hover {
+    background-color: #dee2e6;
+}
