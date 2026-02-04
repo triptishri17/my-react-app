@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
 
-  // 🔹 states
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,9 +25,9 @@ function Login() {
   const [passwordError, setPasswordError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // 🔹 login function
+ 
   const handleLogin = () => {
-    // reset
+ 
     setEmailError("");
     setPasswordError("");
     setSuccessMsg("");
