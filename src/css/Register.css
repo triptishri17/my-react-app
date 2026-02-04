@@ -3,12 +3,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #343a40, #6c757d);
+  background: linear-gradient(135deg, #1d2671, #c33764);
 }
 
 .register-card {
-  width: 400px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 420px;
+  border-radius: 18px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  background: #fff;
+}
+
+.register-card h3 {
+  font-weight: 700;
+}
+
+.register-btn {
+  background: linear-gradient(135deg, #1d2671, #c33764);
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.register-btn:hover {
+  opacity: 0.9;
+}
+
+.form-select {
+  padding: 10px;
+  border-radius: 8px;
 }
 

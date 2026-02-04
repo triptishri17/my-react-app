@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import EditProfile from "./EditProfile";
 import AddUser from "./AddUser";
 import DeleteConfirm from "./DeleteConfrim";
-
-
 import { toast } from "sonner";
-import "../css/Home.css";
+import "../css/home.css";
 
 
 function Home() {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);

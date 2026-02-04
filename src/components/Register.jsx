@@ -12,25 +12,35 @@ import { Link, useNavigate } from "react-router-dom";
 function Register() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    country: ""
+  });
 
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState("");
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleRegister = () => {
     let newErrors = {};
 
-    if (!name) newErrors.name = "Name required";
-    if (!email) newErrors.email = "Email required";
-    if (!password) newErrors.password = "Password required";
+    if (!form.firstName) newErrors.firstName = "First name required";
+    if (!form.lastName) newErrors.lastName = "Last name required";
+    if (!form.email) newErrors.email = "Email required";
+    if (!form.password) newErrors.password = "Password required";
+    if (!form.country) newErrors.country = "Country required";
 
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
 
-    setSuccess("✅ Registration Successful");
+    setSuccess("🎉 Registration Successful!");
 
     setTimeout(() => {
       navigate("/");
@@ -42,56 +52,84 @@ function Register() {
       <MDBCard className="register-card">
         <MDBCardBody className="p-4">
 
-          <h3 className="text-center mb-4">Create Account</h3>
+          <h3 className="text-center mb-1">Create Account</h3>
+          <p className="text-center text-muted mb-4">
+            Join us and start your journey 🚀
+          </p>
 
-          <div className="mb-3">
-            <MDBInput
-              label="Full Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            {errors.name && (
-              <small className="text-danger">{errors.name}</small>
-            )}
+          <div className="row mb-3">
+            <div className="col">
+              <MDBInput
+                label="First Name"
+                name="firstName"
+                value={form.firstName}
+                onChange={handleChange}
+              />
+              {errors.firstName && <small className="text-danger">{errors.firstName}</small>}
+            </div>
+
+            <div className="col">
+              <MDBInput
+                label="Last Name"
+                name="lastName"
+                value={form.lastName}
+                onChange={handleChange}
+              />
+              {errors.lastName && <small className="text-danger">{errors.lastName}</small>}
+            </div>
           </div>
 
           <div className="mb-3">
             <MDBInput
               label="Email Address"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={form.email}
+              onChange={handleChange}
             />
-            {errors.email && (
-              <small className="text-danger">{errors.email}</small>
-            )}
+            {errors.email && <small className="text-danger">{errors.email}</small>}
           </div>
 
           <div className="mb-3">
             <MDBInput
               label="Password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={form.password}
+              onChange={handleChange}
             />
-            {errors.password && (
-              <small className="text-danger">{errors.password}</small>
-            )}
+            {errors.password && <small className="text-danger">{errors.password}</small>}
           </div>
 
-          <MDBBtn color="dark" className="w-100 mb-3" onClick={handleRegister}>
+          <div className="mb-4">
+            <select
+              className="form-select"
+              name="country"
+              value={form.country}
+              onChange={handleChange}
+            >
+              <option value="">Select Country</option>
+              <option value="India">India</option>
+              <option value="USA">USA</option>
+              <option value="UK">UK</option>
+              <option value="Canada">Canada</option>
+            </select>
+            {errors.country && <small className="text-danger">{errors.country}</small>}
+          </div>
+
+          <MDBBtn className="w-100 register-btn" onClick={handleRegister}>
             Register
           </MDBBtn>
 
           {success && (
-            <p className="text-success text-center fw-bold">
+            <p className="text-success text-center fw-bold mt-3">
               {success}
             </p>
           )}
 
-          <p className="text-center mt-2">
+          <p className="text-center mt-3">
             Already have an account?{" "}
-            <Link to="/" className="fw-bold">
+            <Link to="/" className="fw-bold text-decoration-none">
               Login
             </Link>
           </p>
@@ -103,3 +141,4 @@ function Register() {
 }
 
 export default Register;
+
