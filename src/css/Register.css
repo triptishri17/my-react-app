@@ -1,3 +1,8 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 .register-page {
   min-height: 100vh;
   display: flex;
@@ -7,29 +12,86 @@
 }
 
 .register-card {
-  width: 420px;
+  width: 200%;
+  max-width: 800px;
   border-radius: 18px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
   background: #fff;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.7s ease;
 }
 
-.register-card h3 {
+/* IMAGE SLIDER */
+.image-slider {
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.image-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: fade 1s ease-in-out;
+}
+
+/* TITLE */
+.register-title {
   font-weight: 700;
+  color: #1d2671;
 }
 
+.register-title span {
+  color: #c33764;
+}
+
+/* ===== FORM SIZE CONTROL ===== */
+.register-form {
+  max-width: 340px;   /* 👈 inputs chhote */
+  margin: 0 auto;
+}
+
+.register-form .form-control {
+  height: 38px;
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* BUTTON */
 .register-btn {
+  width: 100%;
+  height: 38px;
+  font-size: 15px;
+  border-radius: 30px;
   background: linear-gradient(135deg, #1d2671, #c33764);
   border: none;
-  padding: 10px;
-  font-size: 16px;
 }
 
 .register-btn:hover {
   opacity: 0.9;
 }
 
-.form-select {
-  padding: 10px;
-  border-radius: 8px;
+/* ANIMATIONS */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+@keyframes fade {
+  from {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
