@@ -3,7 +3,7 @@ import EditProfile from "./EditProfile";
 import AddUser from "./AddUser";
 import DeleteConfirm from "./DeleteConfrim";
 import { toast } from "sonner";
-import "../css/UserList.css";
+import "../css/userList.css";
 
 import {
     Pencil,
