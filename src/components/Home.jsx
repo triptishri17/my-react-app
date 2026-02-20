@@ -1,119 +1,120 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EditProfile from "./EditProfile";
-import AddUser from "./AddUser";
-import DeleteConfirm from "./DeleteConfrim";
-import { toast } from "sonner";
+
+import {
+  LayoutDashboard,
+  Users,
+  BarChart3,
+  Settings,
+  LogOut,
+  Menu,
+  Sun,
+  Moon
+} from "lucide-react";
+
+import UserList from "./UserList";
+import DashboardCharts from "./DashboardCharts";
 import "../css/home.css";
 
-
 function Home() {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [addModalOpen, setAddModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState(null);
-
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then(res => res.json())
-      .then(data => setUsers(data))
-      .catch(() => toast.error("Failed to fetch users"));
-  }, []);
+  const [activePage, setActivePage] = useState("dashboard");
+  const [collapsed, setCollapsed] = useState(false);
 
-  const handleAddUser = (newUser) => {
-    fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newUser),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setUsers([...users, { ...newUser, id: data.id || users.length + 1 }]);
-        toast.success("User added successfully ✅");
-      })
-      .catch(() => toast.error("Failed to add user"));
-  };
+  // 🌙 DARK MODE STATE
+  const [darkMode, setDarkMode] = useState(false);
 
-  const handleUpdateUser = (updatedUser) => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${updatedUser.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedUser),
-    })
-      .then(res => res.json())
-      .then(data => {
-        setUsers(users.map(u => (u.id === data.id ? data : u)));
-        toast.success("User updated successfully ✅");
-      })
-      .catch(() => toast.error("Failed to update user"));
-  };
-
-  const confirmDeleteModal = (id) => {
-    setDeleteUserId(id);
-    setDeleteModalOpen(true);
-  };
-
-  const handleDeleteUser = () => {
-    fetch(`https://jsonplaceholder.typicode.com/users/${deleteUserId}`, { method: "DELETE" })
-      .then(() => {
-        setUsers(users.filter(u => u.id !== deleteUserId));
-        setDeleteModalOpen(false);
-        setDeleteUserId(null);
-        toast.success("User deleted successfully 🗑️");
-      })
-      .catch(() => toast.error("Failed to delete user"));
-  };
+  const role = "admin";
 
   return (
-    <div className="home-container">
-      <h2>Home Page</h2>
-      <button onClick={() => setAddModalOpen(true)}>Add User</button>
+    <div className={`dashboard-layout ${darkMode ? "dark" : "light"}`}>
 
-      <table className="user-table">
-        <thead>
-          <tr>
-            <th>ID</th><th>Name</th><th>Username</th><th>Email</th><th>Address</th><th>Actions</th>
-          </tr>
-        </thead>
-<tbody>
-  {[...users].reverse().map((user, index) => (
-    <tr key={user.id}>
-    
-      <td>{index + 1}</td>
+      {/* ===== SIDEBAR ===== */}
+      <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
 
-      <td>{user.name}</td>
-      <td>{user.username}</td>
-      <td>{user.email}</td>
-      <td>{user.address?.street}</td>
+        {/* HEADER */}
+        <div className="sidebar-header">
+          {!collapsed && <h2 className="logo">Admin Panel</h2>}
 
-      <td>
-        <button onClick={() => {
-          setSelectedUser(user);
-          setEditModalOpen(true);
-        }}>
-          Edit
+          <div className="header-actions">
+            {/* DARK MODE TOGGLE */}
+            <button
+              className="icon-btn"
+              onClick={() => setDarkMode(!darkMode)}
+            >
+              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
+            {/* COLLAPSE */}
+            <Menu
+              className="collapse-icon"
+              onClick={() => setCollapsed(!collapsed)}
+            />
+          </div>
+        </div>
+
+        {/* MENU */}
+        <button
+          className={activePage === "dashboard" ? "active" : ""}
+          onClick={() => setActivePage("dashboard")}
+        >
+          <LayoutDashboard size={18} />
+          {!collapsed && "Dashboard"}
         </button>
 
-        <button onClick={() => confirmDeleteModal(user.id)}>
-          Delete
+        {role === "admin" && (
+          <>
+            <button
+              className={activePage === "users" ? "active" : ""}
+              onClick={() => setActivePage("users")}
+            >
+              <Users size={18} />
+              {!collapsed && "Users"}
+            </button>
+
+            <button
+              className={activePage === "reports" ? "active" : ""}
+              onClick={() => setActivePage("reports")}
+            >
+              <BarChart3 size={18} />
+              {!collapsed && "Reports"}
+            </button>
+          </>
+        )}
+
+        <button
+          className={activePage === "settings" ? "active" : ""}
+          onClick={() => setActivePage("settings")}
+        >
+          <Settings size={18} />
+          {!collapsed && "Settings"}
         </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
 
+        <button className="logout-btn" onClick={() => navigate("/")}>
+          <LogOut size={18} />
+          {!collapsed && "Logout"}
+        </button>
+      </aside>
 
-      </table>
+      {/* ===== MAIN ===== */}
+      <main className="main-content">
+        {activePage === "dashboard" && (
+          <>
+            <h2>Dashboard</h2>
+            <div className="stats">
+              <div className="card"><h4>Total Users</h4><p>100</p></div>
+              <div className="card"><h4>Active Users</h4><p>80</p></div>
+              <div className="card"><h4>Pending</h4><p>20</p></div>
+            </div>
+            <DashboardCharts />
+          </>
+        )}
 
-      <AddUser isOpen={addModalOpen} close={() => setAddModalOpen(false)} onAdd={handleAddUser} />
-      <EditProfile isOpen={editModalOpen} close={() => setEditModalOpen(false)} user={selectedUser} onSave={handleUpdateUser} />
-      <DeleteConfirm isOpen={deleteModalOpen} close={() => setDeleteModalOpen(false)} onConfirm={handleDeleteUser} />
-
-      <button onClick={() => navigate("/")}>Logout</button>
+        {activePage === "users" && <UserList />}
+        {activePage === "reports" && <h2>📊 Reports</h2>}
+        {activePage === "settings" && <h2>⚙️ Settings</h2>}
+      </main>
     </div>
   );
 }

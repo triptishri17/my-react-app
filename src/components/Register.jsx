@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Register.css";
+import { toast } from "react-toastify";
+
 import {
   MDBBtn,
   MDBContainer,
@@ -7,11 +9,14 @@ import {
   MDBCardBody,
   MDBInput
 } from "mdb-react-ui-kit";
+
+import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const navigate = useNavigate();
 
+  // ---------- IMAGE SLIDER ----------
   const images = [
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
     "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
@@ -26,38 +31,74 @@ function Register() {
     return () => clearInterval(interval);
   }, []);
 
-  // FORM STATE
+  // ---------- FORM STATE ----------
   const [form, setForm] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
+    avatar: null
   });
 
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState("");
 
+  // ---------- HANDLERS ----------
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     let newErrors = {};
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+    // ✅ Frontend validation
     if (!form.username) newErrors.username = "Username required";
-    if (!form.email) newErrors.email = "Email required";
-    if (!form.password) newErrors.password = "Password required";
+    if (!form.email || !emailRegex.test(form.email))
+      newErrors.email = "Valid email required";
+    if (!passwordRegex.test(form.password))
+      newErrors.password =
+        "Password must be 8+ chars with uppercase, number & special char";
+    if (!form.avatar) newErrors.avatar = "Avatar is required";
 
-    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fix the form errors");
+      return;
+    }
 
-    if (Object.keys(newErrors).length > 0) return;
+    try {
+      const formData = new FormData();
+      formData.append("username", form.username);
+      formData.append("email", form.email);
+      formData.append("password", form.password);
+      formData.append("avatar", form.avatar);
 
-    setSuccess("🎉 Registration Successful!");
+      const res = await axios.post(
+        "http://localhost:5000/auth/user/user-register",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
 
-    setTimeout(() => {
-      navigate("/");
-    }, 1500);
+      if (res.data?.success) {
+        toast.success("🎉 Registration Successful!");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else {
+        toast.error(res.data?.message || "Registration failed");
+      }
+
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Server error, try again"
+      );
+    }
   };
 
+  // ---------- JSX ----------
   return (
     <MDBContainer fluid className="register-page">
       <MDBCard className="register-card">
@@ -68,17 +109,17 @@ function Register() {
             <img src={images[currentImg]} alt="SugarPetal" />
           </div>
 
-          {/* TITLE */}
           <h2 className="text-center register-title">
             Join <span>SugarPetal</span>
           </h2>
+
           <p className="text-center text-muted mb-4">
             Explore your beauty with us
           </p>
 
-          {/* FORM (WIDTH CONTROLLED) */}
           <div className="register-form">
 
+            {/* USERNAME */}
             <div className="mb-3">
               <MDBInput
                 label="Username"
@@ -91,6 +132,7 @@ function Register() {
               )}
             </div>
 
+            {/* EMAIL */}
             <div className="mb-3">
               <MDBInput
                 label="Email Address"
@@ -104,6 +146,7 @@ function Register() {
               )}
             </div>
 
+            {/* PASSWORD */}
             <div className="mb-3">
               <MDBInput
                 label="Password"
@@ -117,17 +160,26 @@ function Register() {
               )}
             </div>
 
-            <MDBBtn className="register-btn" onClick={handleRegister}>
+            {/* AVATAR */}
+            <div className="mb-3">
+              <input
+                type="file"
+                accept="image/*"
+                className="form-control"
+                onChange={(e) =>
+                  setForm({ ...form, avatar: e.target.files[0] })
+                }
+              />
+              {errors.avatar && (
+                <small className="text-danger">{errors.avatar}</small>
+              )}
+            </div>
+
+            <MDBBtn className="register-btn w-100" onClick={handleRegister}>
               Create Account
             </MDBBtn>
 
           </div>
-
-          {success && (
-            <p className="text-success text-center fw-bold mt-3">
-              {success}
-            </p>
-          )}
 
           <p className="text-center mt-3">
             Already have an account?{" "}
@@ -143,4 +195,3 @@ function Register() {
 }
 
 export default Register;
-
