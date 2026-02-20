@@ -42,7 +42,7 @@ const AddUser = ({ isOpen, close, onAdd }) => {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:5000/auth/user/all",
+        "https://backend-sv9r.onrender.com/auth/user/all",
         payload,
         {
           headers: {
