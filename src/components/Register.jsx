@@ -76,7 +76,7 @@ function Register() {
       formData.append("avatar", form.avatar);
 
       const res = await axios.post(
-        "http://localhost:5000/auth/user/user-register",
+        "https://backend-sv9r.onrender.com/auth/user/user-register",
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
