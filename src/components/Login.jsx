@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Login.css";
+import { toast } from "react-toastify";
+
 import {
   MDBBtn,
   MDBContainer,
@@ -8,21 +10,22 @@ import {
   MDBRow,
   MDBCol,
   MDBIcon,
-  MDBInput
+  MDBInput,
 } from "mdb-react-ui-kit";
+
 import { Link, useNavigate } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 function Login() {
   const navigate = useNavigate();
 
+  // ---------- STATE ----------
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-
+  // ---------- IMAGE SLIDER ----------
   const images = [
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
     "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
@@ -34,37 +37,49 @@ function Login() {
     const interval = setInterval(() => {
       setCurrentImg((prev) => (prev + 1) % images.length);
     }, 3000);
-
     return () => clearInterval(interval);
   }, []);
 
-  const handleLogin = () => {
-    setEmailError("");
-    setPasswordError("");
-    setSuccessMsg("");
+  // ---------- LOGIN HANDLER ----------
+  const handleLogin = async () => {
+    setErrors({});
+    let newErrors = {};
 
-    let valid = true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!email) {
-      setEmailError("Email required");
-      valid = false;
+    if (!email || !emailRegex.test(email)) {
+      newErrors.email = "Enter a valid email address";
     }
 
-    if (!password) {
-      setPasswordError("Password required");
-      valid = false;
+    if (!password || password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
     }
 
-    if (!valid) return;
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error("Please fix the errors");
+      return;
+    }
 
-    if (email === "admin@gmail.com" && password === "1234") {
-      setSuccessMsg("✅ Login Successful");
-      setTimeout(() => navigate("/home"), 1000);
-    } else {
-      setPasswordError("Invalid email or password");
+    try {
+      const res = await AuthService.login(email, password);
+console.log(res,"dfasdfasf")
+      // ✅ BEST PRACTICE: check token
+      if (res?.token) {
+        toast.success("Login successful 🎉");
+
+        setTimeout(() => {
+          navigate("/home");
+        }, 800);
+      } else {
+        toast.error(res?.message || "Invalid email or password");
+      }
+    } catch (err) {
+      toast.error(err.message || "Server error, try again");
     }
   };
 
+  // ---------- JSX ----------
   return (
     <MDBContainer fluid className="login-page">
       <MDBCard className="login-card">
@@ -77,17 +92,13 @@ function Login() {
                 <img src={images[currentImg]} alt="SugarPetal" />
               </div>
 
-              {/* TITLE */}
               <h2 className="text-center welcome-title">
                 Welcome to <span>SugarPetal</span>
               </h2>
-              <p className="text-center text-muted mb-4">
-                Please login to continue
-              </p>
 
-              {/* FORM (WIDTH CONTROLLED) */}
               <div className="login-form">
 
+                {/* EMAIL */}
                 <div className="mb-3">
                   <MDBInput
                     label="Email"
@@ -95,11 +106,12 @@ function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {emailError && (
-                    <small className="text-danger">{emailError}</small>
+                  {errors.email && (
+                    <small className="text-danger">{errors.email}</small>
                   )}
                 </div>
 
+                {/* PASSWORD */}
                 <div className="mb-3 position-relative">
                   <MDBInput
                     label="Password"
@@ -107,39 +119,24 @@ function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-
                   <MDBIcon
                     fas
                     icon={showPassword ? "eye-slash" : "eye"}
                     className="password-toggle"
                     onClick={() => setShowPassword(!showPassword)}
                   />
-
-                  {passwordError && (
-                    <small className="text-danger">{passwordError}</small>
+                  {errors.password && (
+                    <small className="text-danger">{errors.password}</small>
                   )}
                 </div>
 
-                <MDBBtn
-                  color="dark"
-                  className="login-btn mb-3"
-                  onClick={handleLogin}
-                >
+                {/* BUTTON */}
+                <MDBBtn className="login-btn mb-3" onClick={handleLogin}>
                   Login
                 </MDBBtn>
-
               </div>
 
-              {successMsg && (
-                <p className="text-success text-center fw-bold">
-                  {successMsg}
-                </p>
-              )}
-
-              <Link
-                to="/forgot-password"
-                className="small text-muted d-block text-center"
-              >
+              <Link to="/forgot-password" className="small d-block text-center">
                 Forgot password?
               </Link>
 

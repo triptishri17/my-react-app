@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/ForgotPassword.css";
+import { toast } from "react-toastify";
+
 import {
   MDBBtn,
   MDBContainer,
@@ -7,11 +9,13 @@ import {
   MDBCardBody,
   MDBInput
 } from "mdb-react-ui-kit";
+
 import { Link } from "react-router-dom";
 import axios from "axios";
 
 function ForgotPassword() {
 
+  // ---------- IMAGE SLIDER ----------
   const images = [
     "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
     "https://images.unsplash.com/photo-1512496015851-a90fb38ba796",
@@ -19,8 +23,6 @@ function ForgotPassword() {
 
   const [currentImg, setCurrentImg] = useState(0);
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,12 +32,10 @@ function ForgotPassword() {
     return () => clearInterval(interval);
   }, []);
 
+  // ---------- SUBMIT ----------
   const handleSubmit = async () => {
-    setError("");
-    setSuccess("");
-
     if (!email) {
-      setError("Email is required");
+      toast.error("Email is required");
       return;
     }
 
@@ -43,14 +43,19 @@ function ForgotPassword() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        "http://localhost:5000/auth/user/all",
         { email }
       );
 
-      setSuccess(res.data.message || "Reset link sent successfully");
+      // ✅ Success
+      toast.success(
+        res.data?.message || "Reset link sent successfully"
+      );
       setEmail("");
+
     } catch (err) {
-      setError(
+      // ❌ Error
+      toast.error(
         err.response?.data?.message || "Something went wrong"
       );
     } finally {
@@ -58,6 +63,7 @@ function ForgotPassword() {
     }
   };
 
+  // ---------- JSX ----------
   return (
     <MDBContainer fluid className="forgot-page">
       <MDBCard className="forgot-card">
@@ -85,7 +91,6 @@ function ForgotPassword() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {error && <small className="text-danger">{error}</small>}
             </div>
 
             <MDBBtn
@@ -97,12 +102,6 @@ function ForgotPassword() {
             </MDBBtn>
 
           </div>
-
-          {success && (
-            <p className="text-success text-center fw-bold mt-3">
-              {success}
-            </p>
-          )}
 
           <div className="text-center mt-3">
             <Link to="/" className="back-login">

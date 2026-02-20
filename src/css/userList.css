@@ -1,0 +1,202 @@
+/* ================================================= */
+/* USER MANAGEMENT – PROFESSIONAL ADMIN PANEL STYLE */
+/* ================================================= */
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.user-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.header-left h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.header-left p {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.add-user-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.add-user-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+}
+
+/* ============================= */
+/* USER TABLE */
+/* ============================= */
+
+.user-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+/* ============================= */
+/* TABLE HEADER */
+/* ============================= */
+
+.user-table thead {
+  background: rgba(243, 244, 246, 0.95);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.user-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #374151;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ============================= */
+/* TABLE BODY */
+/* ============================= */
+
+.user-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Zebra rows */
+.user-table tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+/* Hover row */
+.user-table tbody tr {
+  transition: background 0.25s ease;
+}
+
+.user-table tbody tr:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* ============================= */
+/* ACTION BUTTONS */
+/* ============================= */
+
+.action-group {
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 0.25s ease;
+}
+
+.user-table tbody tr:hover .action-group {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.action-btn {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Edit button – Green */
+.edit-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #f0fdf4;
+}
+
+.edit-btn:hover {
+  box-shadow: 0 6px 14px rgba(34, 197, 94, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Delete button – Red */
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff5f5;
+}
+
+.delete-btn:hover {
+  box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ============================= */
+/* COLUMN WIDTH */
+/* ============================= */
+
+.user-table th:first-child,
+.user-table td:first-child {
+  width: 60px;
+  text-align: center;
+}
+
+.user-table th:last-child,
+.user-table td:last-child {
+  width: 220px;
+}
+
+/* ============================= */
+/* EMPTY STATE */
+/* ============================= */
+
+.user-table td[colspan] {
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+  .user-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .user-table th,
+  .user-table td {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .action-group {
+    opacity: 1;
+    transform: none;
+  }
+}
+
