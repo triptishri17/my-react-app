@@ -1,28 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import {
   LayoutDashboard,
   Users,
   BarChart3,
-  Settings,
   LogOut,
   Menu,
   Sun,
-  Moon
+  Moon,
+  Bell,
+  Settings as SettingsIcon   // 👈 rename icon
 } from "lucide-react";
-
+import { ShoppingBag } from "lucide-react";
+import Settings from "./Settings"; // 👈 component safe
+import Products from "./Products";
 import UserList from "./UserList";
 import DashboardCharts from "./DashboardCharts";
 import "../css/home.css";
+import Reports from "./Reports";
 
 function Home() {
   const navigate = useNavigate();
 
   const [activePage, setActivePage] = useState("dashboard");
   const [collapsed, setCollapsed] = useState(false);
-
-  // 🌙 DARK MODE STATE
   const [darkMode, setDarkMode] = useState(false);
 
   const role = "admin";
@@ -32,29 +33,14 @@ function Home() {
 
       {/* ===== SIDEBAR ===== */}
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-
-        {/* HEADER */}
         <div className="sidebar-header">
           {!collapsed && <h2 className="logo">Admin Panel</h2>}
-
-          <div className="header-actions">
-            {/* DARK MODE TOGGLE */}
-            <button
-              className="icon-btn"
-              onClick={() => setDarkMode(!darkMode)}
-            >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            {/* COLLAPSE */}
-            <Menu
-              className="collapse-icon"
-              onClick={() => setCollapsed(!collapsed)}
-            />
-          </div>
+          <Menu
+            className="collapse-icon"
+            onClick={() => setCollapsed(!collapsed)}
+          />
         </div>
 
-        {/* MENU */}
         <button
           className={activePage === "dashboard" ? "active" : ""}
           onClick={() => setActivePage("dashboard")}
@@ -84,12 +70,20 @@ function Home() {
         )}
 
         <button
-          className={activePage === "settings" ? "active" : ""}
-          onClick={() => setActivePage("settings")}
-        >
-          <Settings size={18} />
-          {!collapsed && "Settings"}
-        </button>
+            className={activePage === "products" ? "active" : ""}
+            onClick={() => setActivePage("products")}
+           >
+          <ShoppingBag size={18} />
+         {!collapsed && "Products"}
+      </button>
+
+       <button
+      className={activePage === "settings" ? "active" : ""}
+        onClick={() => setActivePage("settings")}
+      >
+  <SettingsIcon size={18} />
+  {!collapsed && "Settings"}
+      </button>
 
         <button className="logout-btn" onClick={() => navigate("/")}>
           <LogOut size={18} />
@@ -97,23 +91,53 @@ function Home() {
         </button>
       </aside>
 
-      {/* ===== MAIN ===== */}
+      {/* ===== MAIN CONTENT ===== */}
       <main className="main-content">
+
+        {/* TOP BAR */}
+        <div className="topbar">
+          <h2 className="page-title">Dashboard Overview</h2>
+
+          <div className="topbar-actions">
+            <Bell className="icon-btn" />
+            <button className="icon-btn" onClick={() => setDarkMode(!darkMode)}>
+              {darkMode ? <Sun /> : <Moon />}
+            </button>
+          </div>
+        </div>
+
         {activePage === "dashboard" && (
           <>
-            <h2>Dashboard</h2>
+            {/* ===== INFORMATION HIERARCHY: STATS FIRST ===== */}
             <div className="stats">
-              <div className="card"><h4>Total Users</h4><p>100</p></div>
-              <div className="card"><h4>Active Users</h4><p>80</p></div>
-              <div className="card"><h4>Pending</h4><p>20</p></div>
+              <div className="card info">
+                <p>Total Users</p>
+                <h3>1,240</h3>
+                <span className="trend up">↑ 12% this month</span>
+              </div>
+
+              <div className="card success">
+                <p>Active Users</p>
+                <h3>980</h3>
+                <span className="trend up">↑ 8% active</span>
+              </div>
+
+              <div className="card warning">
+                <p>Pending Users</p>
+                <h3>260</h3>
+                <span className="trend down">↓ Needs review</span>
+              </div>
             </div>
+
+            {/* ===== CHART STORYTELLING ===== */}
             <DashboardCharts />
           </>
         )}
 
         {activePage === "users" && <UserList />}
-        {activePage === "reports" && <h2>📊 Reports</h2>}
-        {activePage === "settings" && <h2>⚙️ Settings</h2>}
+        {activePage === "reports" && <h2><Reports /></h2>}
+        {activePage === "products" && <Products />}
+        {activePage === "settings" && <Settings />}
       </main>
     </div>
   );

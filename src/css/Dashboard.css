@@ -1,44 +1,97 @@
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+/* ================= THEME VARIABLES ================= */
+:root {
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ================= DASHBOARD LAYOUT ================= */
+.dashboard-container {
+  padding: 30px;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 30px;
 }
 
+.dashboard-header h2 {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.theme-toggle {
+  background: var(--card-bg);
+  border: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  color: var(--text);
+}
+
+/* ================= STATS GRID ================= */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 35px;
+}
+
+/* ================= STAT CARD ================= */
 .card {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
+  background: var(--card-bg);
+  padding: 22px;
+  border-radius: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow);
+  transition: all 0.25s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card-left p {
   margin: 0;
-  color: #666;
   font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 .card-left h3 {
-  margin-top: 8px;
-  font-size: 28px;
-  color: #222;
+  margin-top: 6px;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text);
 }
 
 .card-icon {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff;
 }

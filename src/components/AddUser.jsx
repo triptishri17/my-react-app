@@ -3,6 +3,8 @@ import Modal from "react-modal";
 import "../css/EditProfile.css";
 import axios from "axios";
 
+const API_URL = "http://localhost:5000";
+
 const customStyles = {
   content: {
     top: "50%",
@@ -18,51 +20,52 @@ const customStyles = {
 };
 
 const AddUser = ({ isOpen, close, onAdd }) => {
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ ADD USER API CALL
   const handleAdd = async () => {
-    if (!name || !email) {
-      alert("Name and Email are required");
+    if (!firstname || !email || !password) {
+      alert("Firstname, Email and Password are required");
       return;
     }
-
-    const payload = {
-      name,
-      username,
-      email,
-      address,
-    };
 
     try {
       setLoading(true);
 
+      const token = localStorage.getItem("token");
+
+      const requestObject = {
+       firstName: firstname ,
+       lastName: lastname,
+       email: email,
+       password: password,
+      };
+
       const response = await axios.post(
-        "https://backend-sv9r.onrender.com/auth/user/all",
-        payload,
+        `${API_URL}/auth/user/user-register`,
+        requestObject,
         {
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
 
       if (response.data?.success) {
-        onAdd(response.data.user); // send user to parent
+        onAdd(response.data.user);
         close();
 
-        // reset form
-        setName("");
-        setUsername("");
+        setFirstname("");
+        setLastname("");
         setEmail("");
-        setAddress("");
+        setPassword("");
       }
     } catch (error) {
-      console.error("Add user error:", error);
+      console.error("Add user error:", error.response?.data || error.message);
       alert("Failed to add user ❌");
     } finally {
       setLoading(false);
@@ -79,22 +82,20 @@ const AddUser = ({ isOpen, close, onAdd }) => {
       <div className="edit-modal">
         <div className="modal-header">
           <h2>Add User</h2>
-          <button className="close-btn" onClick={close}>
-            ×
-          </button>
+          <button className="close-btn" onClick={close}>×</button>
         </div>
 
         <div className="modal-body">
           <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name"
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+            placeholder="First Name"
           />
 
           <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            placeholder="Last Name"
           />
 
           <input
@@ -104,24 +105,18 @@ const AddUser = ({ isOpen, close, onAdd }) => {
           />
 
           <input
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Address"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
           />
         </div>
 
         <div className="modal-footer">
-          <button
-            className="btn primary"
-            onClick={handleAdd}
-            disabled={loading}
-          >
+          <button className="btn primary" onClick={handleAdd} disabled={loading}>
             {loading ? "Adding..." : "Add"}
           </button>
-
-          <button className="btn secondary" onClick={close}>
-            Cancel
-          </button>
+          <button className="btn secondary" onClick={close}>Cancel</button>
         </div>
       </div>
     </Modal>

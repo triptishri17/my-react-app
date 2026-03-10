@@ -7,6 +7,8 @@ function Layout({ children }) {
   const [active, setActive] = useState("dashboard");
   const role = "admin"; // change to "user"
 
+
+   
   return (
     <div className="dashboard-layout">
       <Sidebar
